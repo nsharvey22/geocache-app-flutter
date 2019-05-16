@@ -10,19 +10,23 @@ class MyApp extends StatelessWidget {
       title: "Parallax",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        scaffoldBackgroundColor: Color(0xffFFAF1B),
+        scaffoldBackgroundColor: Color(0xff210002),
+        hintColor: Color(0xffFFAF1B),
       ),
-      home: MyHomePage(),
+      home: LoginPage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class LoginPage extends StatefulWidget {
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _LoginPageState extends State<LoginPage> {
+  String _email, _password;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   double rateZero = 0;
   double rateOne = 0;
   double rateTwo = 0;
@@ -43,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
         onNotification: (v) {
           if (v is ScrollUpdateNotification) {
             //only if scroll update notification is triggered
-            print("scrolling");
+           
             setState(() {
               rateEight -= v.scrollDelta / 1;
               rateSeven -= v.scrollDelta / 1.1;
@@ -57,8 +61,18 @@ class _MyHomePageState extends State<MyHomePage> {
             });
           }
         },
+        
         child: Stack(
           children: <Widget>[
+            Positioned(
+              top: 0,
+              left: -250,
+              child: Container(
+                  height: 400,
+                  width: 1100,
+                  color: Color(0xffFFAF1B),
+                ),
+            ),
             ParallaxWidget(top: rateZero, asset: "parallax0"),
             ParallaxWidget(top: rateOne, asset: "parallax1"),
             ParallaxWidget(top: rateTwo, asset: "parallax2"),
@@ -68,14 +82,9 @@ class _MyHomePageState extends State<MyHomePage> {
             ParallaxWidget(top: rateSix, asset: "parallax6"),
             ParallaxWidget(top: rateSeven, asset: "parallax7"),
             ParallaxWidget(top: rateEight, asset: "parallax8"),
-            ListView(
-              children: <Widget>[
-                Container(
-                  height: 500,
+
+            Container(
                   color: Colors.transparent,
-                ),
-                Container(
-                  color: Color(0xff210002),
                   width: double.infinity,
                   padding: EdgeInsets.only(top: 70),
                   child: Column(
@@ -85,11 +94,69 @@ class _MyHomePageState extends State<MyHomePage> {
                       Text(
                         "Scavenger",
                         style: TextStyle(
+                            shadows: <Shadow>[
+                              Shadow(
+                                offset: Offset(0.0, 0.0),
+                                blurRadius: 8.0,
+                                color: Color(0xffffaf00),
+                              ),
+                            ],
                             fontSize: 51,
                             fontFamily: "MontSerrat-Regular",
                             letterSpacing: 1.8,
-                            color: Color(0xffffaf00)),
+                            color: Color(0xff210002)),
                       ),
+                    ]
+                  )
+            ),
+            
+            ListView(
+              children: <Widget>[
+                Container(
+                  height: 300,
+                  color: Colors.transparent,
+                ),
+                Container(
+                  color: Colors.transparent,
+                  width: double.infinity,
+                  padding: EdgeInsets.only(top: 70),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                    SizedBox(
+                      width: 250,
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          children: <Widget>[
+                            TextFormField(
+                              validator: (input) {
+                                if(input.isEmpty) {
+                                  return 'Please type an email';
+                                }
+                              },
+                              onSaved: (input) => _email = input,
+                              decoration:  InputDecoration(
+                                labelText: 'Email',
+                                hintText: 'Enter an email',
+                              ),
+                            ),
+                            TextFormField(
+                              validator: (input) {
+                                if(input.length < 6) {
+                                  return 'Your password needs to be atleast 6 characters';
+                                }
+                              },
+                              onSaved: (input) => _password = input,
+                              decoration:  InputDecoration(
+                                labelText: 'Password'
+                              ),
+                              obscureText: true,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                       SizedBox(
                         height: 20,
                       ),
@@ -103,23 +170,22 @@ class _MyHomePageState extends State<MyHomePage> {
                       SizedBox(
                         height: 20,
                       ),
-                      Text(
-                        "Made By",
+                      SizedBox(
+                        width: 200,
+                        height: 50,
+                      child: RaisedButton(
+                        color: Color(0xffffaf00),
+                        onPressed: () {},
+                      child: Text(
+                        "Log In",
                         style: TextStyle(
-                          fontSize: 15,
+                          fontSize: 32,
                           fontFamily: "Montserrat-Extralight",
                           letterSpacing: 1.3,
-                          color: Color(0xffffaf00),
+                          color: Color(0xff210002),
                         ),
                       ),
-                      Text(
-                        "Nick Harvey",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontFamily: "Montserrat-Regular",
-                          letterSpacing: 1.8,
-                          color: Color(0xffffaf00),
-                        ),
+                      ),
                       ),
                       SizedBox(
                         height: 50,
@@ -127,12 +193,34 @@ class _MyHomePageState extends State<MyHomePage> {
                     ],
                   ),
                 ),
+                Container(
+                  color: Color(0xff210002),
+                  width: double.infinity,
+                  padding: EdgeInsets.only(top: 70),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                     
+                      SizedBox(
+                        height: 80,
+                      ),
+                      
+                    ],
+                  ),
+                ),
               ],
-            )
+            ),
           ],
         ),
       ),
     );
+  }
+
+  void signIn() {
+    final formState = _formKey.currentState;
+    if (formState.validate()) {
+
+    }
   }
 }
 
@@ -149,11 +237,11 @@ class ParallaxWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      left: -150,
+      left: -250,
       top: top,
       child: Container(
-        height: 550,
-        width: 900,
+        height: 680,
+        width: 1100,
         child: Image.asset("assets/$asset.png", fit: BoxFit.cover),
       ),
     );

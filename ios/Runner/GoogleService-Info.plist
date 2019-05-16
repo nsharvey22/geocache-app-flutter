@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>98411302465-ov8rn63gke2r0q7f6ueu1dlocd69nphu.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.98411302465-ov8rn63gke2r0q7f6ueu1dlocd69nphu</string>
+	<key>API_KEY</key>
+	<string>AIzaSyB7vzXxEYN1FfCCNMzWP1IV8A49ssWz2YE</string>
+	<key>GCM_SENDER_ID</key>
+	<string>98411302465</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.nickharvey.scavenger</string>
+	<key>PROJECT_ID</key>
+	<string>scavenger-c3066</string>
+	<key>STORAGE_BUCKET</key>
+	<string>scavenger-c3066.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:98411302465:ios:3f42cd74c70278ff</string>
+	<key>DATABASE_URL</key>
+	<string>https://scavenger-c3066.firebaseio.com</string>
+</dict>
+</plist>
