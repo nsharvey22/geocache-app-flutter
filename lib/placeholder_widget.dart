@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 class PlaceholderWidget extends StatelessWidget {
- final Color color;
-
- PlaceholderWidget(this.color);
+String title;
+Color color;
+PlaceholderWidget(this.title, this.color);
 
  @override
  Widget build(BuildContext context) {
-   return Container(
+   return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        middle: Text(title),
+      ),
+      child: Container(
      color: color,
-   );
+   ),
+    );
  }
 }

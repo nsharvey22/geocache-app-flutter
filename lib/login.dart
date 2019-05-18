@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:scavenger/home.dart';
@@ -27,12 +28,12 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: NotificationListener(
+    return CupertinoPageScaffold(
+      child: NotificationListener(
         onNotification: (v) {
           if (v is ScrollUpdateNotification) {
             //only if scroll update notification is triggered
-           
+
             setState(() {
               rateEight -= v.scrollDelta / 1;
               rateSeven -= v.scrollDelta / 1.1;
@@ -46,17 +47,16 @@ class _LoginPageState extends State<LoginPage> {
             });
           }
         },
-        
         child: Stack(
           children: <Widget>[
             Positioned(
               top: 0,
               left: -250,
               child: Container(
-                  height: 400,
-                  width: 1100,
-                  color: Color(0xffFFAF1B),
-                ),
+                height: 400,
+                width: 1100,
+                color: Color(0xffFFAF1B),
+              ),
             ),
             ParallaxWidget(top: rateZero, asset: "parallax0"),
             ParallaxWidget(top: rateOne, asset: "parallax1"),
@@ -67,24 +67,22 @@ class _LoginPageState extends State<LoginPage> {
             ParallaxWidget(top: rateSix, asset: "parallax6"),
             ParallaxWidget(top: rateSeven, asset: "parallax7"),
             Positioned(
-              bottom: -rateEight-400,
+              bottom: -rateEight - 400,
               left: -250,
               child: Container(
-                  height: 400,
-                  width: 1100,
-                  color: Color(0xff210002),
-                ),
+                height: 400,
+                width: 1100,
+                color: Color(0xff210002),
+              ),
             ),
             ParallaxWidget(top: rateEight, asset: "parallax8"),
-
             Container(
-                  color: Colors.transparent,
-                  width: double.infinity,
-                  padding: EdgeInsets.only(top: 70),
-                  child: Column(
+                color: Colors.transparent,
+                width: double.infinity,
+                padding: EdgeInsets.only(top: 70),
+                child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                     
                       Text(
                         "Scavenger",
                         style: TextStyle(
@@ -105,10 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                             letterSpacing: 1.8,
                             color: Color(0xffEC821B)),
                       ),
-                    ]
-                  )
-            ),
-            
+                    ])),
             ListView(
               children: <Widget>[
                 Container(
@@ -122,47 +117,49 @@ class _LoginPageState extends State<LoginPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                    SizedBox(
-                      width: 250,
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          children: <Widget>[
-                            TextFormField(
-                              style: TextStyle(color: Color(0xffEC821B)),
-                              keyboardType: TextInputType.emailAddress,
-                              validator: (input) {
-                                if(input.isEmpty) {
-                                  return 'Please type an email';
-                                }
-                              },
-                              onSaved: (input) => _email = input,
-                              decoration:  InputDecoration(
-                                filled: true,
-                                fillColor: Color.fromRGBO(255, 200, 100, 0.3),
-                                labelText: 'Email',
-                                hintText: 'Enter an email',
+                      SizedBox(
+                        width: 250,
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            children: <Widget>[
+                              CupertinoTextField(
+                                style: TextStyle(color: Color(0xffEC821B)),
+                                keyboardType: TextInputType.emailAddress,
+                                onChanged: (input) => _email = input,
+                                // validator: (input) {
+                                //   if (input.isEmpty) {
+                                //     return 'Please type an email';
+                                //   }
+                                // },
+                                // onSaved: (input) => _email = input,
+                                // decoration: InputDecoration(
+                                //   filled: true,
+                                //   fillColor: Color.fromRGBO(255, 200, 100, 0.3),
+                                //   labelText: 'Email',
+                                //   hintText: 'Enter an email',
+                                // ),
                               ),
-                            ),
-                            TextFormField(
-                              style: TextStyle(color: Color(0xffEC821B)),
-                              validator: (input) {
-                                if(input.length < 6) {
-                                  return 'Your password needs to be atleast 6 characters';
-                                }
-                              },
-                              onSaved: (input) => _password = input,
-                              decoration:  InputDecoration(
-                                filled: true,
-                                fillColor: Color.fromRGBO(255, 200, 100, 0.3),
-                                labelText: 'Password'
+                              CupertinoTextField(
+                                style: TextStyle(color: Color(0xffEC821B)),
+                                onChanged: (input) => _password = input,
+                                // validator: (input) {
+                                //   if (input.length < 6) {
+                                //     return 'Your password needs to be atleast 6 characters';
+                                //   }
+                                // },
+                                // onSaved: (input) => _password = input,
+                                // decoration: InputDecoration(
+                                //     filled: true,
+                                //     fillColor:
+                                //         Color.fromRGBO(255, 200, 100, 0.3),
+                                //     labelText: 'Password'),
+                                obscureText: true,
                               ),
-                              obscureText: true,
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
                       SizedBox(
                         height: 20,
                       ),
@@ -177,21 +174,21 @@ class _LoginPageState extends State<LoginPage> {
                         height: 20,
                       ),
                       SizedBox(
-                        width: 200,
-                        height: 50,
-                      child: RaisedButton(
-                        color: Color(0xffffaf00),
-                        onPressed: signIn,
-                      child: Text(
-                        "Log In",
-                        style: TextStyle(
-                          fontSize: 32,
-                          fontFamily: "Montserrat-Extralight",
-                          letterSpacing: 1.3,
-                          color: Color(0xff210002),
+                        width: 240,
+                        height: 70,
+                        child: CupertinoButton(
+                          color: Color(0xffffaf00),
+                          onPressed: signIn,
+                          child: Text(
+                            "Log In",
+                            style: TextStyle(
+                              fontSize: 32,
+                              fontFamily: "Montserrat-Extralight",
+                              letterSpacing: 1.3,
+                              color: Color(0xff210002),
+                            ),
+                          ),
                         ),
-                      ),
-                      ),
                       ),
                       SizedBox(
                         height: 50,
@@ -206,11 +203,9 @@ class _LoginPageState extends State<LoginPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                     
                       SizedBox(
                         height: 80,
                       ),
-                      
                     ],
                   ),
                 ),
@@ -227,12 +222,12 @@ class _LoginPageState extends State<LoginPage> {
     if (formState.validate()) {
       formState.save();
       try {
-        FirebaseUser user = await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email, password: _password);
+        FirebaseUser user = await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: _email, password: _password);
         Navigator.pushReplacementNamed(context, "/home");
-      } catch(e) {
+      } catch (e) {
         print(e.message);
       }
-      
     }
   }
 }
