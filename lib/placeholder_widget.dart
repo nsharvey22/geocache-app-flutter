@@ -10,6 +10,7 @@ PlaceholderWidget(this.title, this.color);
  Widget build(BuildContext context) {
    return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
+        backgroundColor: Color(0xffFFAF1B),
         middle: Text(title),
       ),
       child: Container(
