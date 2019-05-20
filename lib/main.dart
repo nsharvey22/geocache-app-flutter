@@ -30,6 +30,7 @@ class MyApp extends StatelessWidget {
       home: HomePage(),
       routes: {
         "/home": (_) => HomePage(),
+        
       },
     )
     : MaterialApp(

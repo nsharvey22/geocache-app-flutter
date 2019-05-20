@@ -15,6 +15,10 @@ import 'package:location/location.dart';
 import 'package:flutter/services.dart';
 
 class HomePage extends StatefulWidget {
+  final String markerName;
+
+  HomePage({Key key, this.markerName}) : super (key: key);
+  
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -22,6 +26,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   // MARK: vars used
+  
   Firestore firestore = Firestore.instance;
   Geoflutterfire geo = Geoflutterfire();
   GoogleMapController mapController;
@@ -32,6 +37,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Location location = new Location();
   String error;
   bool showCard = false;
+  int _currentIndex;
   String cacheName = "";
   String posted_by = "";
   String description = "";
@@ -42,11 +48,52 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Stream<dynamic> query;
   StreamSubscription subscription;
 
+  CupertinoTabScaffold tabScaffold;
+
   @override
   void initState() {
     super.initState();
+    
     WidgetsBinding.instance.addObserver(this);
     initPlatformState();
+    _currentIndex = 1;
+    markers.forEach((MarkerId markerId, Marker marker) {
+      if (marker.markerId.value == widget.markerName) {
+        marker.onTap();
+      }
+    });
+
+    tabScaffold = CupertinoTabScaffold(
+        tabBar: CupertinoTabBar(
+          currentIndex: _currentIndex,
+          backgroundColor: Color(0xffFFAF1B),
+          inactiveColor: Color(0xff210002),
+          items: [
+            BottomNavigationBarItem(
+              icon: new Icon(CupertinoIcons.person),
+              title: new Text('Profile'),
+            ),
+            BottomNavigationBarItem(
+              icon: new Icon(Icons.map),
+              title: new Text('Map'),
+            ),
+            BottomNavigationBarItem(
+                icon: Icon(CupertinoIcons.news), title: Text('Feed'))
+          ],
+        ),
+        tabBuilder: (context, index) {
+          switch (index) {
+            case 0:
+              return PlaceholderWidget("Profile", Colors.blue);
+              break;
+            case 1:
+              return buildMap();
+              break;
+            case 2:
+              return FeedPage(userLocation);
+              break;
+          }
+        });
   }
 
   void initPlatformState() async {
@@ -91,41 +138,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         _overlap = 0;
       }
     });
+    
   }
-
+  
   //MARK: Main scaffold
   @override
   Widget build(BuildContext context) {
-    return CupertinoTabScaffold(
-        tabBar: CupertinoTabBar(
-          backgroundColor: Color(0xffFFAF1B),
-          inactiveColor: Color(0xff210002),
-          items: [
-            BottomNavigationBarItem(
-              icon: new Icon(CupertinoIcons.person),
-              title: new Text('Profile'),
-            ),
-            BottomNavigationBarItem(
-              icon: new Icon(Icons.map),
-              title: new Text('Map'),
-            ),
-            BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.news), title: Text('Feed'))
-          ],
-        ),
-        tabBuilder: (context, index) {
-          switch (index) {
-            case 0:
-              return PlaceholderWidget("Profile", Colors.blue);
-              break;
-            case 1:
-              return buildMap();
-              break;
-            case 2:
-              return FeedPage(userLocation);
-              break;
-          }
-        });
+    return tabScaffold;
   }
 
   //MARK: Map Screen builder

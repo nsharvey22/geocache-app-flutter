@@ -82,6 +82,33 @@ double rateZero = 0;
               ),
             ),
             ParallaxWidget(top: rateEight, asset: "parallax8"),
+            Container(
+                color: Colors.transparent,
+                width: double.infinity,
+                padding: EdgeInsets.only(top: 70),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      CircleAvatar(
+                      radius: 70,
+                      backgroundColor: Color(0xffFFE473),
+                      child: Icon(
+                        Icons.person,
+                        size: 100,
+                        color: Color(0xff210002),
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Text(
+                        "Nick",
+                        style: TextStyle(
+                            fontSize: 36,
+                            fontFamily: "MontSerrat-Regular",
+                            letterSpacing: 1.8,
+                            color: Color(0xff210002)),
+                      ),
+                      
+                    ])),
             ListView(
               children: <Widget>[
                 Container(
