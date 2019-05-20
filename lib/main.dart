@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
   ]);
+    // Check which OS the device is running and use appropriate app package
     return isIOS 
       ? CupertinoApp(
       title: "Parallax",
@@ -27,11 +28,7 @@ class MyApp extends StatelessWidget {
         primaryContrastingColor: Color(0xffFFAF1B)
         //hintColor: Color(0xffFFAF1B),
       ),
-      home: HomePage(),
-      routes: {
-        "/home": (_) => HomePage(),
-        
-      },
+      home: LoginPage(),
     )
     : MaterialApp(
       title: "Parallax",
@@ -42,9 +39,6 @@ class MyApp extends StatelessWidget {
         hintColor: Color(0xffFFAF1B),
       ),
       home: LoginPage(),
-      routes: {
-        "/home": (_) => HomePage(),
-      },
     );
   }
 }

@@ -66,6 +66,8 @@ PODS:
     - GoogleUtilities/Environment (~> 6.0)
     - GoogleUtilities/UserDefaults (~> 6.0)
   - Flutter (1.0.0)
+  - flutter_secure_storage (3.2.0):
+    - Flutter
   - geoflutterfire (0.0.1):
     - Flutter
   - geolocator (4.0.3):
@@ -138,6 +140,7 @@ DEPENDENCIES:
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - Flutter (from `.symlinks/flutter/ios`)
+  - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - geoflutterfire (from `.symlinks/plugins/geoflutterfire/ios`)
   - geolocator (from `.symlinks/plugins/geolocator/ios`)
   - google_api_availability (from `.symlinks/plugins/google_api_availability/ios`)
@@ -174,6 +177,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_core/ios"
   Flutter:
     :path: ".symlinks/flutter/ios"
+  flutter_secure_storage:
+    :path: ".symlinks/plugins/flutter_secure_storage/ios"
   geoflutterfire:
     :path: ".symlinks/plugins/geoflutterfire/ios"
   geolocator:
@@ -200,6 +205,7 @@ SPEC CHECKSUMS:
   FirebaseFirestore: 0537b2a960a4819fae2834e688e5daeb571c81d6
   FirebaseInstanceID: 0e0348a3c00a734fa376a070f5ad4533ad975cb5
   Flutter: 9d0fac939486c9aba2809b7982dfdbb47a7b0296
+  flutter_secure_storage: dbcc8ff35d99569c3a4d3b483afa3339416c1a78
   geoflutterfire: 44694e56250c715a43f3fe75706538cc4fb105dc
   geolocator: 191e1ae5853d9d142e9c3c71fe79eb9ff154cf24
   google_api_availability: cd29400b9c6eb73b0978f609f0ad66f41dfa90b4

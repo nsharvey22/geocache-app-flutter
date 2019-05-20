@@ -3,15 +3,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/semantics.dart';
 import 'login.dart';
 
-class PlaceholderWidget extends StatefulWidget {
-  String title;
-  Color color;
-  PlaceholderWidget(this.title, this.color);
+class ProfilePage extends StatefulWidget {
+  String userName;
+  ProfilePage(this.userName);
 
   @override
-  _PlaceholderWidgetState createState() => _PlaceholderWidgetState();
+  _ProfilePageState createState() => _ProfilePageState();
 }
-class _PlaceholderWidgetState extends State<PlaceholderWidget> {
+class _ProfilePageState extends State<ProfilePage> {
 String title;
 double rateZero = 0;
   double rateOne = 0;
@@ -32,7 +31,7 @@ double rateZero = 0;
    return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         backgroundColor: Color(0xffFFAF1B),
-        middle: Text(widget.title),
+        middle: Text(widget.userName),
       ),
       child: NotificationListener(
         onNotification: (v) {
@@ -100,7 +99,7 @@ double rateZero = 0;
                       ),
                       SizedBox(height: 20),
                       Text(
-                        "Nick",
+                        widget.userName,
                         style: TextStyle(
                             fontSize: 36,
                             fontFamily: "MontSerrat-Regular",

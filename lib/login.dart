@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:scavenger/home.dart';
+import 'localstorage.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -123,9 +124,13 @@ class _LoginPageState extends State<LoginPage> {
                           key: _formKey,
                           child: Column(
                             children: <Widget>[
-                              CupertinoTextField(
+                              SizedBox(
+                                height: 50,
+                              child: CupertinoTextField(
                                 style: TextStyle(color: Color(0xffEC821B)),
                                 keyboardType: TextInputType.emailAddress,
+                                prefix: Text("Email", style: TextStyle(color: Color(0xffEC821B))),
+                                prefixMode: OverlayVisibilityMode.notEditing,
                                 onChanged: (input) => _email = input,
                                 // validator: (input) {
                                 //   if (input.isEmpty) {
@@ -140,9 +145,14 @@ class _LoginPageState extends State<LoginPage> {
                                 //   hintText: 'Enter an email',
                                 // ),
                               ),
-                              CupertinoTextField(
+                              ),
+                              SizedBox(
+                                height: 50,
+                              child: CupertinoTextField(
                                 style: TextStyle(color: Color(0xffEC821B)),
                                 onChanged: (input) => _password = input,
+                                prefix: Text("Password", style: TextStyle(color: Color(0xffEC821B))),
+                                prefixMode: OverlayVisibilityMode.notEditing,
                                 // validator: (input) {
                                 //   if (input.length < 6) {
                                 //     return 'Your password needs to be atleast 6 characters';
@@ -155,6 +165,7 @@ class _LoginPageState extends State<LoginPage> {
                                 //         Color.fromRGBO(255, 200, 100, 0.3),
                                 //     labelText: 'Password'),
                                 obscureText: true,
+                              ),
                               ),
                             ],
                           ),
@@ -224,12 +235,14 @@ class _LoginPageState extends State<LoginPage> {
       try {
         FirebaseUser user = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: _email, password: _password);
-        Navigator.pushReplacementNamed(context, "/home");
+        //Navigator.pushReplacementNamed(context, "/home");
+        Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => HomePage(_email)));
       } catch (e) {
         print(e.message);
       }
     }
   }
+
 }
 
 class ParallaxWidget extends StatelessWidget {

@@ -13,20 +13,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
 import 'package:flutter/services.dart';
+import 'localstorage.dart';
 
 class HomePage extends StatefulWidget {
-  final String markerName;
+  final String email;
 
-  HomePage({Key key, this.markerName}) : super (key: key);
-  
+  HomePage(this.email);
+
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
-
   // MARK: vars used
-  
+
   Firestore firestore = Firestore.instance;
   Geoflutterfire geo = Geoflutterfire();
   GoogleMapController mapController;
@@ -48,52 +48,21 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Stream<dynamic> query;
   StreamSubscription subscription;
 
-  CupertinoTabScaffold tabScaffold;
+  final _storage = new LocalStorage();
+  String userName = "";
 
   @override
   void initState() {
     super.initState();
-    
+
     WidgetsBinding.instance.addObserver(this);
     initPlatformState();
-    _currentIndex = 1;
-    markers.forEach((MarkerId markerId, Marker marker) {
-      if (marker.markerId.value == widget.markerName) {
-        marker.onTap();
-      }
-    });
-
-    tabScaffold = CupertinoTabScaffold(
-        tabBar: CupertinoTabBar(
-          currentIndex: _currentIndex,
-          backgroundColor: Color(0xffFFAF1B),
-          inactiveColor: Color(0xff210002),
-          items: [
-            BottomNavigationBarItem(
-              icon: new Icon(CupertinoIcons.person),
-              title: new Text('Profile'),
-            ),
-            BottomNavigationBarItem(
-              icon: new Icon(Icons.map),
-              title: new Text('Map'),
-            ),
-            BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.news), title: Text('Feed'))
-          ],
-        ),
-        tabBuilder: (context, index) {
-          switch (index) {
-            case 0:
-              return PlaceholderWidget("Profile", Colors.blue);
-              break;
-            case 1:
-              return buildMap();
-              break;
-            case 2:
-              return FeedPage(userLocation);
-              break;
-          }
-        });
+    _currentIndex = 0;
+    // markers.forEach((MarkerId markerId, Marker marker) {
+    //   if (marker.markerId.value == widget.markerName) {
+    //     marker.onTap();
+    //   }
+    // });
   }
 
   void initPlatformState() async {
@@ -111,6 +80,22 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       }
       userLocation = null;
     }
+    _setValue();
+  }
+
+  Future _getValue() async {
+      userName = await _storage.readValue('userName');
+  }
+
+  Future _setValue() async {
+      final QuerySnapshot result = await firestore.collection('users').where('email', isEqualTo: widget.email).getDocuments();
+      final List<DocumentSnapshot> ref = result.documents;
+      ref.forEach((DocumentSnapshot user) {
+        if (user.data['email'] == widget.email) {
+          userName = user.data['name'];
+        }
+    });
+      _storage.writeValue('userName', userName);
   }
 
   void _setVisible(bool visibility) {
@@ -138,13 +123,42 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         _overlap = 0;
       }
     });
-    
   }
-  
+
   //MARK: Main scaffold
   @override
   Widget build(BuildContext context) {
-    return tabScaffold;
+    return CupertinoTabScaffold(
+        tabBar: CupertinoTabBar(
+          currentIndex: _currentIndex,
+          backgroundColor: Color(0xffFFAF1B),
+          inactiveColor: Color(0xff210002),
+          items: [
+            BottomNavigationBarItem(
+              icon: new Icon(CupertinoIcons.person),
+              title: new Text('Profile'),
+            ),
+            BottomNavigationBarItem(
+              icon: new Icon(Icons.map),
+              title: new Text('Map'),
+            ),
+            BottomNavigationBarItem(
+                icon: Icon(CupertinoIcons.news), title: Text('Feed'))
+          ],
+        ),
+        tabBuilder: (context, index) {
+          switch (index) {
+            case 0:
+              return ProfilePage(userName);
+              break;
+            case 1:
+              return buildMap();
+              break;
+            case 2:
+              return FeedPage(userLocation);
+              break;
+          }
+        });
   }
 
   //MARK: Map Screen builder
@@ -297,8 +311,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         markerId: markerId,
         position: LatLng(pos.latitude, pos.longitude),
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
-        infoWindow:
-            InfoWindow(title: name, snippet: 'Distance: $distance'),
+        infoWindow: InfoWindow(title: name, snippet: 'Distance: $distance'),
         onTap: () {
           _setVisible(true);
           cacheName = name;
@@ -347,9 +360,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     GeoFirePoint point = geo.point(
         latitude: _position.target.latitude,
         longitude: _position.target.longitude);
-    return firestore
-        .collection('locations')
-        .add({'position': point.data, 'name': markerId.value, 'description': description});
+    return firestore.collection('locations').add({
+      'posted_by': userName,
+      'position': point.data,
+      'name': markerId.value,
+      'description': description
+    });
   }
 
   //MARK: shows the details of a geocache in a modal pop up
@@ -477,9 +493,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                 style: TextStyle(color: Color(0xff210002)),
                                 onChanged: (input) => description = input,
                               ))),
-                              SizedBox(
-                                height: 20,
-                              ),
+                      SizedBox(
+                        height: 20,
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
@@ -488,21 +504,20 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                             child: CupertinoButton(
                               padding: EdgeInsets.symmetric(horizontal: 5),
                               color: Color(0xffffaf00),
-                              onPressed: () => {
-                                _addMarker(),
-                                Navigator.pop(context)},
+                              onPressed: () =>
+                                  {_addMarker(), Navigator.pop(context)},
                               child: SizedBox(
                                 height: 50,
                                 child: Center(
-                                child: Text(
-                                  "Add",
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                    fontFamily: "Montserrat-Extralight",
-                                    letterSpacing: 1.3,
-                                    color: Color(0xff210002),
+                                  child: Text(
+                                    "Add",
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                      fontFamily: "Montserrat-Extralight",
+                                      letterSpacing: 1.3,
+                                      color: Color(0xff210002),
+                                    ),
                                   ),
-                                ),
                                 ),
                               ),
                             ),
@@ -520,15 +535,15 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                               child: SizedBox(
                                 height: 50,
                                 child: Center(
-                                child: Text(
-                                  "Cancel",
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                    fontFamily: "Montserrat-Extralight",
-                                    letterSpacing: 1.3,
-                                    color: Color(0xff210002),
+                                  child: Text(
+                                    "Cancel",
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                      fontFamily: "Montserrat-Extralight",
+                                      letterSpacing: 1.3,
+                                      color: Color(0xff210002),
+                                    ),
                                   ),
-                                ),
                                 ),
                               ),
                             ),
