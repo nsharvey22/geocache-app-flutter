@@ -1,4 +1,4 @@
-# scavenger
+# scavenger -the geocache ios app
 
 A new Flutter project.
 
